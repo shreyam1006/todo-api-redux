@@ -2,7 +2,7 @@ const loginReducer = (state = [], action) => {
 
     switch (action.type) {
         case "FETCH_USER_DATA_REJECT":
-            localStorage.setItem('auth-token', '')
+            localStorage.removeItem('auth-token')
             alert("Email id or password incorrect")
             return [...state, action.payload]
         case "FETCH_USER_DATA_RESPONSE":
@@ -14,7 +14,7 @@ const loginReducer = (state = [], action) => {
             alert("Success!")
             return [...state, action.payload]
         case "FETCH_REGISTER_DATA_REJECT":
-            localStorage.setItem('auth-token', '')
+            localStorage.removeItem('auth-token')
             alert("This account already exists")
             return [...state, action.payload]
         default: return state

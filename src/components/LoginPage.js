@@ -11,6 +11,9 @@ const LoginPage = () => {
 
     const loginButton = async () => {
         dispatch(fetchUserData(email, password))
+        if (!('auth-token' in localStorage)) {
+            history.push('/todo')
+        }
     }
 
     const signUpButton = async () => {

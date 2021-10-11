@@ -1,9 +1,9 @@
 import React from 'react'
 
-const Todo=()=> {
+const Todo = () => {
     return (
         <div>
-            <h1>Home</h1>
+            <h1>Todos</h1>
         </div>
     )
 }
