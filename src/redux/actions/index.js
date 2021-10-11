@@ -1,4 +1,4 @@
-import { fetchItems } from "../../services/fetch"
+import { fetchItems } from "../../services/fetchItems"
 export const fetchUserRequest = (email, password) => {
 
   return async function (dispatch, getState) {
