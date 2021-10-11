@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
-import { fetchUserData } from '../redux/actions/index'
+import { fetchUserRequest } from '../redux/actions/index'
 
 const LoginPage = () => {
     const [email, setEmail] = useState('')
@@ -10,8 +10,9 @@ const LoginPage = () => {
     const dispatch = useDispatch()
 
     const loginButton = async () => {
-        dispatch(fetchUserData(email, password))
-        if (!('auth-token' in localStorage)) {
+        dispatch(fetchUserRequest(email, password))
+        // console.log(('auth-token' in localStorage))
+        if ('auth-token' in localStorage) {
             history.push('/todo')
         }
     }

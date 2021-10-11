@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { fetchRegisterData } from '../redux/actions/index'
+import { fetchRegisterRequest } from '../redux/actions/index'
 import { useDispatch } from 'react-redux';
 
 const RegisterPage = () => {
@@ -10,7 +10,7 @@ const RegisterPage = () => {
     const dispatch = useDispatch()
 
     const signUpButton = async () => {
-        dispatch(fetchRegisterData(name, email, password, age))
+        dispatch(fetchRegisterRequest(name, email, password, age))
     }
 
     return (
