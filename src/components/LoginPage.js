@@ -1,7 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
-import { storeLoginEmail, storeLoginPassword } from '../redux/actions/index'
-import { fetchUserRequest } from '../redux/actions/loginAction'
+import { storeLoginEmail, storeLoginPassword, fetchUserRequest } from '../redux/actions/authAction'
 import { BeatLoader } from 'react-spinners'
 
 const LoginPage = () => {
@@ -9,7 +8,7 @@ const LoginPage = () => {
     const isLoading = useSelector((state) => state.authReducer.loading)
     const dispatch = useDispatch()
 
-    const signUpButton = async () => {
+    const signUpButton = () => {
         history.push('/register')
     }
 
