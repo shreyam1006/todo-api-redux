@@ -144,7 +144,6 @@ async function handleNetworkCall(apiObject) {
   const url = `${getBaseApiEndPoint()}${apiObject.endPoint}`;
   return new Promise(async (resolve, reject) => {
     try {
-      console.log(fetchObject)
       const fetchResult = await fetch(url, fetchObject);
       return responseHandler(fetchResult, resolve, reject);
     } catch (err) {
