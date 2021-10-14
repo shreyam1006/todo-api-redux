@@ -1,4 +1,6 @@
 import * as ApiService from '../../../src/services/apiService';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const storeLoginEmail = (email) => {
     return {
@@ -42,12 +44,11 @@ export const storeRegisterAge = (age) => {
     }
 }
 
-export const fetchUserRequest = () => {
+export const fetchUserRequest = (history) => {
 
     return async function (dispatch, getState) {
         dispatch({ type: 'FETCH_USER_DATA_REQUEST' })
         const state = getState()
-        console.log(state)
         try {
 
             const APIObj = {
@@ -61,23 +62,23 @@ export const fetchUserRequest = () => {
 
             if (response.responseStatus !== 200) {
                 localStorage.removeItem('auth-token')
-                alert("Email id or password incorrect")
+                toast("Email id or password incorrect")
                 dispatch({ type: 'FETCH_USER_DATA_FAILURE' })
             } else {
                 localStorage.setItem('auth-token', JSON.stringify(response.token))
-                alert("Success!")
                 dispatch({ type: 'FETCH_USER_DATA_SUCCESS', payload: response })
+                history.push('/todo')
             }
         }
         catch (e) {
-            alert("Email id or password incorrect")
+            toast("Email id or password incorrect")
             dispatch({ type: 'FETCH_USER_DATA_FAILURE', payload: e })
         }
 
     }
 }
 
-export const logoutUserRequest = () => {
+export const logoutUserRequest = (history) => {
 
     return async function (dispatch, getState) {
         dispatch({ type: 'LOGOUT_REQUEST' })
@@ -91,21 +92,21 @@ export const logoutUserRequest = () => {
             const response = await ApiService.callApi(APIObj);
 
             if (!response.responseStatus === 200) {
-                alert("Logout Failed")
+                toast("Logout failed")
                 dispatch({ type: 'LOGOUT_FAILURE' })
             } else {
                 localStorage.removeItem('auth-token')
-                alert("Successful Logout")
                 dispatch({ type: 'LOGOUT_SUCCESS' })
+                history.push('/')
             }
         }
         catch (e) {
-            alert("Login again")
+            toast("Login again")
             dispatch({ type: 'LOGOUT_FAILURE', payload: e })
         }
     }
 }
-export const fetchRegisterRequest = () => {
+export const fetchRegisterRequest = (history) => {
 
     return async function (dispatch, getState) {
         dispatch({ type: 'FETCH_REGISTER_DATA_REQUEST' })
@@ -128,16 +129,16 @@ export const fetchRegisterRequest = () => {
 
             if (!response.responseStatus) {
                 localStorage.removeItem('auth-token')
-                alert("This account already exists")
+                toast("This account already exists")
                 dispatch({ type: 'FETCH_REGISTER_DATA_FAILURE' })
             } else {
                 localStorage.setItem('auth-token', JSON.stringify(response.token))
-                alert("Success!")
                 dispatch({ type: 'FETCH_REGISTER_DATA_SUCCESS', payload: response })
+                history.push('/todo')
             }
         }
         catch (e) {
-            alert("Account already exists")
+            toast("This account already exists")
             dispatch({ type: 'FETCH_REGISTER_DATA_FAILURE', payload: e })
         }
 
