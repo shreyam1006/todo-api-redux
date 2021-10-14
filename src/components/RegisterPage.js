@@ -1,12 +1,12 @@
 import { storeRegisterAge, storeRegisterEmail, storeRegisterName, storeRegisterPassword, fetchRegisterRequest } from '../redux/actions/authAction'
 import { useDispatch, useSelector } from 'react-redux';
-import { Grid, Paper, Avatar, Typography, TextField, Button, Link } from '@material-ui/core';
+import { Grid, Paper, Avatar, Typography, Button, Link } from '@material-ui/core';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useHistory } from 'react-router';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
 import TextFieldComponent from './shared/TextFieldComponent';
 
 const gridStyle = {

@@ -14,7 +14,7 @@ const TextFieldComponent = (props) => {
 
     const onBlur = useCallback(() => {
         setIsTouched(true)
-    }, [isTouched])
+    }, [])
 
 
     return (
@@ -29,9 +29,7 @@ const TextFieldComponent = (props) => {
             type={props.type}
             onBlur={onBlur}
             onChange={e => { dispatch(props.onChange(e.target.value)) }}
-        >
-
-        </TextField>
+        />
     )
 
 }

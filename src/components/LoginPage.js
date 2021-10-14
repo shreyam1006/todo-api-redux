@@ -3,10 +3,10 @@ import { useHistory } from 'react-router';
 import { storeLoginEmail, storeLoginPassword, fetchUserRequest } from '../redux/actions/authAction'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import CircularProgress from '@mui/material/CircularProgress';
-import { Grid, Paper, Avatar, Typography, TextField, Button, Link } from '@material-ui/core';
+import { Grid, Paper, Avatar, Typography, Button, Link } from '@material-ui/core';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
 import TextFieldComponent from './shared/TextFieldComponent';
 
 const gridStyle = {
@@ -44,8 +44,6 @@ const LoginPage = () => {
     const isLoading = useSelector((state) => state.authReducer.loading)
     const email = useSelector((state) => state.authReducer.login.email)
     const password = useSelector((state) => state.authReducer.login.password)
-    // const [isEmailTouched, setIsEmailTouched] = useState(false)
-    // const [isPasswordTouched, setIsPasswordTouched] = useState(false)
 
 
     const signUpButton = useCallback(() => {
@@ -78,8 +76,8 @@ const LoginPage = () => {
                     <br />
 
                     <TextFieldComponent
-                        fullWidth={true}
-                        required={true}
+                        fullWidth
+                        required
                         autoComplete="none"
                         label="Email Address"
                         helperText='Email is required'
@@ -91,8 +89,8 @@ const LoginPage = () => {
                     <br />
                     <br />
                     <TextFieldComponent
-                        fullWidth={true}
-                        required={true}
+                        fullWidth
+                        required
                         autoComplete="none"
                         label="Password"
                         helperText='Password is required'
