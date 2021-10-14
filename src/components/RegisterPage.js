@@ -7,6 +7,33 @@ import { useHistory } from 'react-router';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useState, useCallback } from 'react';
+import TextFieldComponent from './shared/TextFieldComponent';
+
+const gridStyle = {
+    backgroundColor: '#303030'
+}
+
+const avatarStyle = {
+    backgroundColor: '#00b0ff'
+}
+
+const paperStyle = {
+    padding: '10vh',
+    height: '90vh',
+    width: '400px',
+    margin: '0px auto',
+    backgroundColor: '#303030'
+}
+
+const extraDiv = {
+    display: 'flex'
+}
+
+const toastStyle = {
+    backgroundColor: "rgb(203 89 95)",
+    color: 'white'
+}
+const pattern = /\S+@\S+\.\S+/
 
 const RegisterPage = () => {
     const dispatch = useDispatch()
@@ -16,42 +43,8 @@ const RegisterPage = () => {
     const password = useSelector((state) => state.authReducer.register.password)
     const name = useSelector((state) => state.authReducer.register.name)
     const age = useSelector((state) => state.authReducer.register.age)
-    const [isEmailTouched, setIsEmailTouched] = useState(false)
-    const [isPasswordTouched, setIsPasswordTouched] = useState(false)
-    const [isNameTouched, setIsNameTouched] = useState(false)
-    const [isAgeTouched, setIsAgeTouched] = useState(false)
-
-    const gridStyle = {
-        backgroundColor: '#303030'
-    }
-
-    const avatarStyle = {
-        backgroundColor: '#00b0ff'
-    }
-
-    const paperStyle = {
-        padding: '10vh',
-        height: '90vh',
-        width: '400px',
-        margin: '0px auto',
-        backgroundColor: '#303030'
-    }
-
-    const extraDiv = {
-        display: 'flex'
-    }
-
-    const toastStyle = {
-        backgroundColor: "rgb(203 89 95)",
-        color: 'white'
-    }
-    var pattern = /\S+@\S+\.\S+/
 
     let setDisable = true
-    let setEmailError = false
-    let setPasswordError = false
-    let setNameError = false
-    let setAgeError = false
 
     if (pattern.test(email) && (password.length > 7) && (age.length > 0) && (name.length > 0)) {
         setDisable = false
@@ -59,22 +52,10 @@ const RegisterPage = () => {
     if (isLoading === true) {
         setDisable = true
     }
-    if (!pattern.test(email) && isEmailTouched === true) {
-        setEmailError = true
-    }
-    if (password.length < 1 && isPasswordTouched === true) {
-        setPasswordError = true
-    }
-    if (name.length < 1 && isNameTouched === true) {
-        setNameError = true
-    }
-    if (age < 13 && isAgeTouched === true) {
-        setAgeError = true
-    }
 
-    const signInButton = () => {
+    const signInButton = useCallback(() => {
         history.push('/')
-    }
+    }, [history])
 
     const signUpButton = useCallback(() =>
         dispatch(fetchRegisterRequest(history)),
@@ -93,57 +74,57 @@ const RegisterPage = () => {
                         <Typography variant="h5">Sign up</Typography>
                         <br />
                         <div style={extraDiv}>
-                            <TextField
-                                required
-                                error={setNameError}
+
+                            <TextFieldComponent
+                                fullWidth={false}
+                                required={true}
                                 autoComplete="none"
                                 label="Name"
-                                helperText={setNameError ? 'Name is required' : ''}
+                                helperText='Name is required'
                                 variant="outlined"
                                 type="name"
-                                onBlur={() => { setIsNameTouched(true) }}
-                                onChange={e => dispatch(storeRegisterName(e.target.value))}
+                                onChange={storeRegisterName}
+                                condition={name.length < 1}
                             />
                             &ensp;
                             &ensp;
-                            <TextField
-                                required
-                                error={setAgeError}
+                            <TextFieldComponent
+                                fullWidth={false}
+                                required={true}
                                 autoComplete="none"
                                 label="Age"
-                                helperText={setAgeError ? 'Age is required' : ''}
+                                helperText='Age is required'
                                 variant="outlined"
                                 type="number"
-                                onBlur={() => { setIsAgeTouched(true) }}
-                                onChange={e => dispatch(storeRegisterAge(e.target.value))}
+                                onChange={storeRegisterAge}
+                                condition={age < 13}
                             />
                         </div>
                         <br />
-                        <TextField
-                            fullWidth
-                            required
-                            error={setEmailError}
+                        <TextFieldComponent
+                            fullWidth={true}
+                            required={true}
                             autoComplete="none"
                             label="Email Address"
-                            helperText={setEmailError ? 'Enter valid email id' : ''}
+                            helperText='Email is required'
                             variant="outlined"
                             type="email"
-                            onBlur={() => { setIsEmailTouched(true) }}
-                            onChange={e => dispatch(storeRegisterEmail(e.target.value))}
+                            onChange={storeRegisterEmail}
+                            condition={!pattern.test(email)}
                         />
                         <br />
                         <br />
-                        <TextField
-                            fullWidth
-                            error={setPasswordError}
-                            required
+                        <TextFieldComponent
+                            fullWidth={true}
+                            required={true}
                             autoComplete="none"
                             label="Password"
-                            helperText={setPasswordError ? 'Password is required' : ''}
+                            helperText='Password is required'
                             variant="outlined"
                             type="password"
-                            onBlur={() => { setIsPasswordTouched(true) }}
-                            onChange={e => dispatch(storeRegisterPassword(e.target.value))} />
+                            onChange={storeRegisterPassword}
+                            condition={password.length < 7}
+                        />
                         <br />
                         <br />
                         <Button
