@@ -38,7 +38,7 @@ export const addItemRequest = () => {
 export const getAllItemsRequest = () => {
 
     return async function (dispatch, getState) {
-        dispatch({ type: 'GET_ITEM_REQUEST' })
+        dispatch({ type: 'GET_ALL_ITEM_REQUEST' })
 
         try {
             const APIObj = {
@@ -48,12 +48,12 @@ export const getAllItemsRequest = () => {
             }
 
             const response = await ApiService.callApi(APIObj)
-            // console.log(response.data)
+            // console.log(response.data[0])
 
-            if (!response.responseStatus === 200) {
-                dispatch({ type: 'GET_ITEM_FAILURE' })
+            if (response.responseStatus !== 200) {
+                dispatch({ type: 'GET_ALL_ITEM_FAILURE' })
             } else {
-                dispatch({ type: 'GET_ITEM_SUCCESS', payload: response.data })
+                dispatch({ type: 'GET_ALL_ITEM_SUCCESS', payload: response.data })
             }
         } catch (e) {
             dispatch({ type: 'GET_ITEM_FAILURE' })

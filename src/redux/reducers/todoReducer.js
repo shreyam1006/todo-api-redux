@@ -1,9 +1,13 @@
 const initialState = {
     addItem: {
-        newItem: ''
+        newItem: '',
+        loading: false
     },
 
-    loading: false
+    taskList: {
+        list: [],
+        loading: false
+    }
 
 }
 
@@ -13,17 +17,20 @@ const todoReducer = (state = initialState, action) => {
         case "STORE_ADD_ITEM":
             return { ...state, addItem: { ...state.addItem, newItem: action.payload } }
         case "ADD_ITEM_REQUEST":
-            return { ...state, loading: true }
+            return { ...state, addItem: { ...state.addItem, loading: true } }
         case "ADD_ITEM_FAILURE":
             alert("Please Login Again")
-            return { ...state, loading: false }
+            return { ...state, addItem: { ...state.addItem, loading: false } }
         case "ADD_ITEM_SUCCESS":
-            return { ...state, loading: false }
-        case "GET_ITEM_SUCCESS":
-            return state
-        case "GET_ITEM_FAILURE":
+            return { ...state, addItem: { ...state.addItem, loading: false } }
+
+        case "GET_ALL_ITEM_REQUEST":
+            return { ...state, taskList: { ...state.taskList, loading: true } }
+        case "GET_ALL_ITEM_SUCCESS":
+            return { ...state, taskList: { ...state.taskList, list: action.payload, loading: false } }
+        case "GET_ALL_ITEM_FAILURE":
             alert("Account already exists")
-            return state
+            return { ...state, taskList: { ...state.taskList, loading: true } }
         default: return state
     }
 }
