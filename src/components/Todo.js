@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { AppBar, Toolbar, FormControl, InputLabel, Select, MenuItem, Button, Typography, Grid, styled, Box, List, ListItem, ListItemText, Checkbox, IconButton } from "@material-ui/core"
+import { AppBar, Toolbar, FormControl, InputLabel, Select, MenuItem, Button, Typography, Grid, styled, Box, List } from "@material-ui/core"
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import { useCallback } from 'react'
 import { addItemRequest, getAllItemsRequest } from '../redux/actions/todoAction'
@@ -9,7 +9,7 @@ import { useHistory } from 'react-router'
 import CircularProgress from '@mui/material/CircularProgress'
 import TextFieldComponent from './shared/TextFieldComponent'
 import { storeAddItem } from '../redux/actions/todoAction'
-import { DeleteOutlined, EditOutlined } from '@mui/icons-material'
+import ListItemComponent from './shared/ListItemComponent'
 
 const StyledToolbar = styled(Toolbar)({
     justifyContent: 'space-between',
@@ -26,19 +26,16 @@ const StyledGrid = styled(Grid)({
     flexDirection: 'column'
 })
 
+const StyledContainerGrid = styled(Grid)({
+    minWidth: '50%'
+})
+
 const StyledButtonLoader = styled(Box)({
     display: (props) => (props.isloading === 'true' ? 'flex' : 'none')
 })
 
 const StyledButtonText = styled(Box)({
     display: (props) => (props.isloading === 'true' ? 'none' : 'flex')
-})
-
-const StyledListItem = styled(ListItem)({
-    minWidth: '100%',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    display: 'flex'
 })
 
 
@@ -55,7 +52,9 @@ const Todo = () => {
     useEffect(() => {
         dispatch(getAllItemsRequest())
     }, [dispatch])
+
     let setDisable = false
+
     const addButton = useCallback(() =>
         dispatch(addItemRequest()),
         [dispatch])
@@ -87,75 +86,57 @@ const Todo = () => {
     return (
         <StyledGrid>
             {isLoading ? <CircularProgress size='150px' /> :
-                <Grid align='center' style={{ minWidth: '50%' }}>
+                <StyledContainerGrid align='center' >
                     <header >
                         <AppBar>{displayDesktop()}</AppBar>
                     </header>
-                    <Grid style={{ minWidth: '100%' }}>
+                    <Grid>
 
+                        {isAllItemLoading ? <CircularProgress size='100px' /> :
 
+                            <Grid>
+                                <TextFieldComponent
+                                    type="text"
+                                    label="Add Item"
+                                    value={newItem}
+                                    onChange={storeAddItem}
+                                />
 
-                        <Grid>
+                                &ensp;
+                                &ensp;
+                                <Button
+                                    style={{ minHeight: '50px' }}
+                                    label="Add Item"
+                                    disabled={setDisable}
+                                    type="submit"
+                                    variant="contained"
+                                    autoComplete='none'
+                                    color='primary'
+                                    onClick={addButton} >
 
-                            {isAllItemLoading ? <CircularProgress size='100px' /> :
+                                    <StyledButtonLoader isloading={isItemLoading.toString()}>
+                                        <CircularProgress size='23px' />
+                                    </StyledButtonLoader>
 
-                                <Grid>
-                                    <TextFieldComponent
-                                        type="text"
-                                        label="Add Item"
-                                        onChange={storeAddItem}
-                                    />
+                                    <StyledButtonText isloading={isItemLoading.toString()}>
+                                        Add
+                                    </StyledButtonText>
 
-                                    &ensp;
-                                    &ensp;
-                                    <Button
-                                        style={{ minHeight: '50px' }}
-                                        label="Add Item"
-                                        disabled={setDisable}
-                                        type="submit"
-                                        variant="contained"
-                                        autoComplete='none'
-                                        color='primary'
-                                        onClick={addButton} >
+                                </Button>
 
-                                        <StyledButtonLoader isloading={isItemLoading.toString()}>
-                                            <CircularProgress size='23px' />
-                                        </StyledButtonLoader>
+                                <List>
+                                    {taskList.map((item) =>
+                                        <ListItemComponent item={item} />
+                                    )}
+                                </List>
+                            </Grid>
+                        }
 
-                                        <StyledButtonText isloading={isItemLoading.toString()}>
-                                            Add
-                                        </StyledButtonText>
-
-                                    </Button>
-                                    <List>
-                                        {taskList.map((item) =>
-                                            <StyledListItem
-                                                key={item._id}
-                                            >
-                                                <Box display='flex'>
-                                                    <Checkbox checked={item.completed ? true : false} />
-                                                    <ListItemText>{item.description}</ListItemText>
-                                                </Box>
-                                                <Box>
-                                                    <IconButton >
-                                                        <EditOutlined />
-                                                    </IconButton>
-                                                    <IconButton>
-                                                        <DeleteOutlined />
-                                                    </IconButton>
-
-                                                </Box>
-
-                                            </StyledListItem>)}
-                                    </List>
-                                </Grid>
-                            }
-                        </Grid>
                     </Grid>
-                </Grid>
+                </StyledContainerGrid>
             }
 
-        </StyledGrid>
+        </StyledGrid >
     )
 }
 

@@ -21,6 +21,7 @@ const TextFieldComponent = (props) => {
         <TextField
             fullWidth={props.fullWidth}
             error={setError}
+            value={props.value}
             required={props.required}
             autoComplete={props.autoComplete}
             label={props.label}

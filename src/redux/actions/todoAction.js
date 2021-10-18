@@ -19,7 +19,7 @@ export const addItemRequest = () => {
                 endPoint: '/task',
                 authenticationRequired: true,
                 method: "POST",
-                body: { description: state.todoReducer.newItem }
+                body: { description: state.todoReducer.addItem.newItem }
             }
 
             const response = await ApiService.callApi(APIObj)
@@ -27,7 +27,7 @@ export const addItemRequest = () => {
             if (response.responseStatus !== 201) {
                 dispatch({ type: 'ADD_ITEM_FAILURE' })
             } else {
-                dispatch({ type: 'ADD_ITEM_SUCCESS' })
+                dispatch({ type: 'ADD_ITEM_SUCCESS', payload: response.data })
             }
         } catch (e) {
             dispatch({ type: 'ADD_ITEM_FAILURE' })
@@ -48,7 +48,6 @@ export const getAllItemsRequest = () => {
             }
 
             const response = await ApiService.callApi(APIObj)
-            // console.log(response.data[0])
 
             if (response.responseStatus !== 200) {
                 dispatch({ type: 'GET_ALL_ITEM_FAILURE' })
@@ -56,7 +55,41 @@ export const getAllItemsRequest = () => {
                 dispatch({ type: 'GET_ALL_ITEM_SUCCESS', payload: response.data })
             }
         } catch (e) {
-            dispatch({ type: 'GET_ITEM_FAILURE' })
+            dispatch({ type: 'GET_ALL_ITEM_FAILURE' })
         }
+    }
+}
+
+export const checkRequest = (id, completed) => {
+
+    return async function (dispatch, getState) {
+        dispatch({ type: 'CHECK_REQUEST', payload: { id } })
+
+        try {
+            const APIObj = {
+                endPoint: '/task/' + id,
+                authenticationRequired: true,
+                method: "PUT",
+                body: { completed }
+            }
+
+            const response = await ApiService.callApi(APIObj)
+
+            if (response.responseStatus !== 200) {
+                dispatch({ type: 'CHECK_FAILURE' })
+            } else {
+                dispatch({ type: 'CHECK_SUCCESS', payload: { id } })
+            }
+        } catch (e) {
+            dispatch({ type: 'CHECK_FAILURE' })
+        }
+    }
+}
+
+export const deleteTaskRequest = (id) => {
+
+    return async function (dispatch, getState) {
+        dispatch({ type: 'DELETE_REQUEST' })
+        dispatch({ type: 'DELETE_SUCCESS', payload: { id } })
     }
 }
