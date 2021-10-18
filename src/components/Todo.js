@@ -1,20 +1,30 @@
 import React from 'react'
 import { AppBar, Toolbar, FormControl, InputLabel, Select, MenuItem, Button, Typography, Grid } from "@material-ui/core"
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
-import { useState } from 'react'
+import { useCallback } from 'react'
 import { addItemRequest, getAllItemsRequest } from '../redux/actions/todoAction'
 import { logoutUserRequest } from '../redux/actions/authAction'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router'
 import CircularProgress from '@mui/material/CircularProgress'
+import TextFieldComponent from './shared/TextFieldComponent'
+import { storeAddItem } from '../redux/actions/todoAction'
 
 const Todo = () => {
     const history = useHistory();
-    const [newItem, setNewItem] = useState('')
-    const taskList = useSelector((state) => state.todoReducer)
+    const newItem = useSelector((state) => state.todoReducer.newItem)
     const isLoading = useSelector((state) => state.authReducer.loading)
+    const isItemLoading = useSelector((state) => state.todoReducer.loading)
 
     const dispatch = useDispatch()
+    let setDisable = false
+    const addButton = useCallback(() =>
+        dispatch(addItemRequest()),
+        [dispatch])
+
+    if (!newItem) {
+        setDisable = true
+    }
 
     const displayDesktop = () => {
         return (<>
@@ -53,14 +63,32 @@ const Todo = () => {
                         <AppBar>{displayDesktop()}</AppBar>
                     </header>
                     <div>
-                        <input type="text"
-                            placeholder="Add Item"
-                            value={newItem}
-                            onChange={e => { setNewItem(e.target.value) }}
-                            onKeyDown={e => { if (e.key === "Enter") { return (dispatch(addItemRequest(newItem)), setNewItem('')) } }} />
-                        <ul>
+
+                        <TextFieldComponent type="text"
+                            label="Add Item"
+                            onChange={storeAddItem}
+                        />
+                        {/* <ul>
                             {taskList.map((item) => <li key={item._id}>{item.description}</li>)}
-                        </ul>
+                        </ul> */}
+                        &ensp;
+                        &ensp;
+                        <Button
+                            style={{ minHeight: '50px' }}
+                            label="Add Item"
+                            disabled={setDisable}
+                            type="submit"
+                            variant="contained"
+                            autoComplete='none'
+                            color='primary'
+                            onClick={addButton} >
+                            <div style={isItemLoading ? { display: 'flex' } : { display: 'none' }}>
+                                <CircularProgress size='23px' />
+                            </div>
+                            <div style={isItemLoading ? { display: 'none' } : { display: 'flex' }}>
+                                Add
+                            </div>
+                        </Button>
                         <button onClick={() => dispatch(getAllItemsRequest())}>Get All</button>
                     </div>
                 </div>

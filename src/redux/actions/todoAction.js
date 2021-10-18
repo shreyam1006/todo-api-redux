@@ -1,22 +1,30 @@
 import * as ApiService from '../../services/apiService';
 
+export const storeAddItem = (item) => {
+    return {
+        type: "STORE_ADD_ITEM",
+        payload: item
+    }
+}
 
-export const addItemRequest = (description) => {
+
+export const addItemRequest = () => {
 
     return async function (dispatch, getState) {
         dispatch({ type: 'ADD_ITEM_REQUEST' })
+        const state = getState()
 
         try {
             const APIObj = {
                 endPoint: '/task',
                 authenticationRequired: true,
                 method: "POST",
-                body: { description }
+                body: { description: state.todoReducer.newItem }
             }
 
             const response = await ApiService.callApi(APIObj)
 
-            if (!response.responseStatus === 201) {
+            if (response.responseStatus !== 201) {
                 dispatch({ type: 'ADD_ITEM_FAILURE' })
             } else {
                 dispatch({ type: 'ADD_ITEM_SUCCESS' })

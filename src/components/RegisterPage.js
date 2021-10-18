@@ -1,6 +1,6 @@
 import { storeRegisterAge, storeRegisterEmail, storeRegisterName, storeRegisterPassword, fetchRegisterRequest } from '../redux/actions/authAction'
 import { useDispatch, useSelector } from 'react-redux';
-import { Grid, Paper, Avatar, Typography, Button, Link } from '@material-ui/core';
+import { Grid, Paper, Avatar, Typography, Button, Link, styled, Box } from '@material-ui/core';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useHistory } from 'react-router';
@@ -9,25 +9,30 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useCallback } from 'react';
 import TextFieldComponent from './shared/TextFieldComponent';
 
-const gridStyle = {
-    backgroundColor: '#303030'
-}
 
-const avatarStyle = {
+const StyledGrid = styled(Grid)({
+    backgroundColor: 'rgb(48, 48, 48)'
+})
+
+const StyledAvatar = styled(Avatar)({
     backgroundColor: '#00b0ff'
-}
+})
 
-const paperStyle = {
+const StyledPaper = styled(Paper)({
     padding: '10vh',
     height: '90vh',
     width: '400px',
     margin: '0px auto',
-    backgroundColor: '#303030'
-}
+    background: 'rgb(48, 48, 48)'
+})
 
-const extraDiv = {
-    display: 'flex'
-}
+const StyledButtonLoader = styled(Box)({
+    display: (props) => (props.isloading === 'true' ? 'flex' : 'none')
+})
+
+const StyledButtonText = styled(Box)({
+    display: (props) => (props.isloading === 'true' ? 'none' : 'flex')
+})
 
 const toastStyle = {
     backgroundColor: "rgb(203 89 95)",
@@ -64,16 +69,16 @@ const RegisterPage = () => {
 
     return (
         <div>
-            <Grid style={gridStyle} >
-                <Paper elevation={0} style={paperStyle}>
+            <StyledGrid >
+                <StyledPaper elevation={0} >
                     <Grid align='center'>
-                        <Avatar style={avatarStyle}>
+                        <StyledAvatar>
                             <LockOutlinedIcon sx={{ color: 'black' }} />
-                        </Avatar>
+                        </StyledAvatar>
                         <br />
                         <Typography variant="h5">Sign up</Typography>
                         <br />
-                        <div style={extraDiv}>
+                        <Box display='flex'>
 
                             <TextFieldComponent
                                 fullWidth={false}
@@ -99,7 +104,7 @@ const RegisterPage = () => {
                                 onChange={storeRegisterAge}
                                 condition={age < 13}
                             />
-                        </div>
+                        </Box>
                         <br />
                         <TextFieldComponent
                             fullWidth={true}
@@ -136,12 +141,12 @@ const RegisterPage = () => {
                             autoComplete='none'
                             color='primary'
                             onClick={signUpButton} >
-                            <div style={isLoading ? { display: 'flex' } : { display: 'none' }}>
+                            <StyledButtonLoader isloading={isLoading.toString()}>
                                 <CircularProgress size='23px' />
-                            </div>
-                            <div style={isLoading ? { display: 'none' } : { display: 'flex' }}>
-                                sign up
-                            </div>
+                            </StyledButtonLoader>
+                            <StyledButtonText isloading={isLoading.toString()}>
+                                Sign up
+                            </StyledButtonText>
                         </Button>
                         <br />
                         <br />
@@ -150,14 +155,14 @@ const RegisterPage = () => {
                             Already have an account? Sign In
                         </Link>
                     </Grid>
-                </Paper>
+                </StyledPaper>
                 <ToastContainer
                     position="bottom-center"
                     autoClose={5000}
                     toastStyle={toastStyle}
                     hideProgressBar={true}
                 />
-            </Grid>
+            </StyledGrid>
 
         </div>
     )

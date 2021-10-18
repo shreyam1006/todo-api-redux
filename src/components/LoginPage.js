@@ -3,32 +3,35 @@ import { useHistory } from 'react-router';
 import { storeLoginEmail, storeLoginPassword, fetchUserRequest } from '../redux/actions/authAction'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import CircularProgress from '@mui/material/CircularProgress';
-import { Grid, Paper, Avatar, Typography, Button, Link } from '@material-ui/core';
+import { Grid, Paper, Avatar, Typography, Button, Link, styled, Box } from '@material-ui/core';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useCallback } from 'react';
 import TextFieldComponent from './shared/TextFieldComponent';
 
-const gridStyle = {
-    backgroundColor: '#303030'
-}
+const StyledGrid = styled(Grid)({
+    backgroundColor: 'rgb(48, 48, 48)'
+})
 
-const paperStyle = {
+const StyledAvatar = styled(Avatar)({
+    backgroundColor: '#00b0ff'
+})
+
+const StyledPaper = styled(Paper)({
     padding: '10vh',
     height: '90vh',
     width: '400px',
     margin: '0px auto',
-    backgroundColor: '#303030'
-}
+    background: 'rgb(48, 48, 48)'
+})
 
-const avatarStyle = {
-    backgroundColor: '#00b0ff'
-}
+const StyledButtonLoader = styled(Box)({
+    display: (props) => (props.isloading === 'true' ? 'flex' : 'none')
+})
 
-const extraDiv = {
-    display: 'flex',
-    justifyContent: 'space-between'
-}
+const StyledButtonText = styled(Box)({
+    display: (props) => (props.isloading === 'true' ? 'none' : 'flex')
+})
 
 const toastStyle = {
     backgroundColor: "rgb(203 89 95)",
@@ -65,12 +68,12 @@ const LoginPage = () => {
     }
 
     return (
-        <Grid style={gridStyle} >
-            <Paper elevation={0} style={paperStyle}>
+        <StyledGrid >
+            <StyledPaper elevation={0} >
                 <Grid align='center'>
-                    <Avatar style={avatarStyle}>
+                    <StyledAvatar>
                         <LockOutlinedIcon sx={{ color: 'black' }} />
-                    </Avatar>
+                    </StyledAvatar>
                     <br />
                     <Typography variant="h5">Log in</Typography>
                     <br />
@@ -109,33 +112,33 @@ const LoginPage = () => {
                         autoComplete='none'
                         color='primary'
                         onClick={loginButton} >
-                        <div style={isLoading ? { display: 'flex' } : { display: 'none' }}>
+                        <StyledButtonLoader isloading={isLoading.toString()}>
                             <CircularProgress size='23px' />
-                        </div>
-                        <div style={isLoading ? { display: 'none' } : { display: 'flex' }}>
-                            sign in
-                        </div>
+                        </StyledButtonLoader>
+                        <StyledButtonText isloading={isLoading.toString()}>
+                            Sign in
+                        </StyledButtonText>
                     </Button>
 
                     <br />
                     <br />
-                    <div style={extraDiv}>
+                    <Box display='flex' justifyContent="space-between">
                         <Link href="#" underline="hover">
                             Forgot Password
                         </Link>
                         <Link href="#" underline="hover" onClick={signUpButton}>
                             Don't have an account? Sign Up
                         </Link>
-                    </div>
+                    </Box>
                 </Grid>
-            </Paper>
+            </StyledPaper>
             <ToastContainer
                 position="bottom-center"
                 autoClose={5000}
                 toastStyle={toastStyle}
                 hideProgressBar={true}
             />
-        </Grid>
+        </StyledGrid>
     )
 }
 
