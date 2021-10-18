@@ -1,5 +1,5 @@
 import React from 'react'
-import { AppBar, Toolbar, FormControl, InputLabel, Select, MenuItem, Button, Typography, Grid } from "@material-ui/core"
+import { AppBar, Toolbar, FormControl, InputLabel, Select, MenuItem, Button, Typography, Grid, styled, Box } from "@material-ui/core"
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import { useCallback } from 'react'
 import { addItemRequest, getAllItemsRequest } from '../redux/actions/todoAction'
@@ -10,9 +10,23 @@ import CircularProgress from '@mui/material/CircularProgress'
 import TextFieldComponent from './shared/TextFieldComponent'
 import { storeAddItem } from '../redux/actions/todoAction'
 
+const StyledToolbar = styled(Toolbar)({
+    justifyContent: 'space-between',
+    display: 'flex'
+})
+
+const StyledButtonLoader = styled(Box)({
+    display: (props) => (props.isloading === 'true' ? 'flex' : 'none')
+})
+
+const StyledButtonText = styled(Box)({
+    display: (props) => (props.isloading === 'true' ? 'none' : 'flex')
+})
+
+
 const Todo = () => {
     const history = useHistory();
-    const newItem = useSelector((state) => state.todoReducer.newItem)
+    const newItem = useSelector((state) => state.todoReducer.addItem.newItem)
     const isLoading = useSelector((state) => state.authReducer.loading)
     const isItemLoading = useSelector((state) => state.todoReducer.loading)
 
@@ -28,7 +42,7 @@ const Todo = () => {
 
     const displayDesktop = () => {
         return (<>
-            <Toolbar style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <StyledToolbar>
                 <Typography variant='h6'>Todo App</Typography>
                 <FormControl >
                     <InputLabel id="demo-simple-select-label"><AccountCircleIcon /></InputLabel>
@@ -41,22 +55,22 @@ const Todo = () => {
                         <MenuItem><Button variant="text" onClick={() => dispatch(logoutUserRequest(history))}>Logout</Button></MenuItem>
                     </Select>
                 </FormControl>
-            </Toolbar>
+            </StyledToolbar>
 
         </>)
     }
 
-    const pageStyle = {
+    const StyledGrid = styled(Grid)({
         backgroundColor: "#303030",
         display: 'flex',
         minHeight: '100vh',
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'column'
-    }
+    })
 
     return (
-        <Grid align="center" style={pageStyle}>
+        <StyledGrid>
             {isLoading ? <CircularProgress size='150px' /> :
                 <div>
                     <header >
@@ -82,21 +96,22 @@ const Todo = () => {
                             autoComplete='none'
                             color='primary'
                             onClick={addButton} >
-                            <div style={isItemLoading ? { display: 'flex' } : { display: 'none' }}>
+
+                            <StyledButtonLoader isloading={isItemLoading.toString()}>
                                 <CircularProgress size='23px' />
-                            </div>
-                            <div style={isItemLoading ? { display: 'none' } : { display: 'flex' }}>
+                            </StyledButtonLoader>
+
+                            <StyledButtonText isloading={isItemLoading.toString()}>
                                 Add
-                            </div>
+                            </StyledButtonText>
+
                         </Button>
                         <button onClick={() => dispatch(getAllItemsRequest())}>Get All</button>
                     </div>
                 </div>
             }
 
-            {/* } */}
-
-        </Grid>
+        </StyledGrid>
     )
 }
 
