@@ -6,6 +6,7 @@ const initialState = {
 
     taskList: {
         list: [],
+        description: '',
         loading: false
     },
 
@@ -17,6 +18,8 @@ const todoReducer = (state = initialState, action) => {
     switch (action.type) {
         case "STORE_ADD_ITEM":
             return { ...state, addItem: { ...state.addItem, newItem: action.payload } }
+        case "STORE_EDIT_ITEM":
+            return { ...state, taskList: { ...state.taskList, description: action.payload } }
         case "ADD_ITEM_REQUEST":
             return { ...state, addItem: { ...state.addItem, loading: true } }
         case "ADD_ITEM_FAILURE":
@@ -66,6 +69,22 @@ const todoReducer = (state = initialState, action) => {
             }
         case "DELETE_FAILURE":
             return state
+
+        case "EDIT_REQUEST":
+            return { ...state, loadingTasks: [...state.loadingTasks, action.payload.id] }
+        case "EDIT_SUCCESS":
+            return {
+                ...state, taskList: {
+                    ...state.taskList, list: state.taskList.list.map((task) => {
+                        if (task._id === action.payload.id) {
+                            task.description = state.taskList.description
+                        }
+                        return task
+                    })
+                }, loadingTasks: []
+            }
+        case "EDIT_FAILURE":
+            return { ...state, loadingTasks: [] }
         default: return state
     }
 }

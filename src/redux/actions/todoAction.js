@@ -7,6 +7,13 @@ export const storeAddItem = (item) => {
     }
 }
 
+export const storeEditItem = (item) => {
+    return {
+        type: "STORE_EDIT_ITEM",
+        payload: item
+    }
+}
+
 
 export const addItemRequest = () => {
 
@@ -91,5 +98,32 @@ export const deleteTaskRequest = (id) => {
     return async function (dispatch, getState) {
         dispatch({ type: 'DELETE_REQUEST' })
         dispatch({ type: 'DELETE_SUCCESS', payload: { id } })
+    }
+}
+
+export const editTaskRequest = (id) => {
+
+    return async function (dispatch, getState) {
+        dispatch({ type: 'EDIT_REQUEST', payload: { id } })
+        const state = getState()
+
+        try {
+            const APIObj = {
+                endPoint: '/task/' + id,
+                authenticationRequired: true,
+                method: "PUT",
+                body: { description: state.todoReducer.taskList.description }
+            }
+
+            const response = await ApiService.callApi(APIObj)
+
+            if (response.responseStatus !== 200) {
+                dispatch({ type: 'EDIT_FAILURE' })
+            } else {
+                dispatch({ type: 'EDIT_SUCCESS', payload: { id } })
+            }
+        } catch (e) {
+            dispatch({ type: 'EDIT_FAILURE' })
+        }
     }
 }

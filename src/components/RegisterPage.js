@@ -1,13 +1,12 @@
 import { storeRegisterAge, storeRegisterEmail, storeRegisterName, storeRegisterPassword, fetchRegisterRequest } from '../redux/actions/authAction'
-import { useDispatch, useSelector } from 'react-redux';
-import { Grid, Paper, Avatar, Typography, Button, Link, styled, Box } from '@material-ui/core';
+import { useSelector } from 'react-redux';
+import { Grid, Paper, Avatar, Typography, Link, styled, Box } from '@material-ui/core';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import CircularProgress from '@mui/material/CircularProgress';
 import { useHistory } from 'react-router';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useCallback } from 'react';
 import TextFieldComponent from './shared/TextFieldComponent';
+import ButtonComponent from './shared/ButtonComponent';
 
 
 const StyledGrid = styled(Grid)({
@@ -26,14 +25,6 @@ const StyledPaper = styled(Paper)({
     background: 'rgb(48, 48, 48)'
 })
 
-const StyledButtonLoader = styled(Box)({
-    display: (props) => (props.isloading === 'true' ? 'flex' : 'none')
-})
-
-const StyledButtonText = styled(Box)({
-    display: (props) => (props.isloading === 'true' ? 'none' : 'flex')
-})
-
 const toastStyle = {
     backgroundColor: "rgb(203 89 95)",
     color: 'white'
@@ -41,31 +32,13 @@ const toastStyle = {
 const pattern = /\S+@\S+\.\S+/
 
 const RegisterPage = () => {
-    const dispatch = useDispatch()
+
     const history = useHistory()
     const isLoading = useSelector((state) => state.authReducer.loading)
     const email = useSelector((state) => state.authReducer.register.email)
     const password = useSelector((state) => state.authReducer.register.password)
     const name = useSelector((state) => state.authReducer.register.name)
     const age = useSelector((state) => state.authReducer.register.age)
-
-    let setDisable = true
-
-    if (pattern.test(email) && (password.length > 7) && (age.length > 0) && (name.length > 0)) {
-        setDisable = false
-    }
-    if (isLoading === true) {
-        setDisable = true
-    }
-
-    const signInButton = useCallback(() => {
-        history.push('/')
-    }, [history])
-
-    const signUpButton = useCallback(() =>
-        dispatch(fetchRegisterRequest(history)),
-        [dispatch, history])
-
 
     return (
         <div>
@@ -132,26 +105,26 @@ const RegisterPage = () => {
                         />
                         <br />
                         <br />
-                        <Button
+
+                        <ButtonComponent
                             style={{ minWidth: '400px' }}
+                            isLoading={isLoading}
                             label="Login"
-                            disabled={setDisable}
                             type="submit"
                             variant="contained"
                             autoComplete='none'
                             color='primary'
-                            onClick={signUpButton} >
-                            <StyledButtonLoader isloading={isLoading.toString()}>
-                                <CircularProgress size='23px' />
-                            </StyledButtonLoader>
-                            <StyledButtonText isloading={isLoading.toString()}>
-                                Sign up
-                            </StyledButtonText>
-                        </Button>
+                            onClick={fetchRegisterRequest}
+                            content="Sign up"
+                            history={history}
+                            disable={true}
+                            loadingcondition={isLoading === true}
+                            condition={pattern.test(email) && (password.length > 7) && (age.length > 0) && (name.length > 0)}
+                        />
                         <br />
                         <br />
 
-                        <Link href="#" underline="hover" onClick={signInButton}>
+                        <Link href="#" underline="hover" onClick={() => history.push('/')}>
                             Already have an account? Sign In
                         </Link>
                     </Grid>

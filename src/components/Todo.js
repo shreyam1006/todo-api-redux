@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
-import { AppBar, Toolbar, FormControl, InputLabel, Select, MenuItem, Button, Typography, Grid, styled, Box, List } from "@material-ui/core"
+import { AppBar, Toolbar, FormControl, InputLabel, Select, MenuItem, Button, Typography, Grid, styled, List, ListItem } from "@material-ui/core"
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
-import { useCallback } from 'react'
 import { addItemRequest, getAllItemsRequest } from '../redux/actions/todoAction'
 import { logoutUserRequest } from '../redux/actions/authAction'
 import { useDispatch, useSelector } from 'react-redux'
@@ -10,6 +9,7 @@ import CircularProgress from '@mui/material/CircularProgress'
 import TextFieldComponent from './shared/TextFieldComponent'
 import { storeAddItem } from '../redux/actions/todoAction'
 import ListItemComponent from './shared/ListItemComponent'
+import ButtonComponent from './shared/ButtonComponent'
 
 const StyledToolbar = styled(Toolbar)({
     justifyContent: 'space-between',
@@ -20,48 +20,41 @@ const StyledGrid = styled(Grid)({
     backgroundColor: "#303030",
     display: 'flex',
     minHeight: '100vh',
-    marginTop: '5vh',
+    marginTop: '10vh',
     justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'column'
+    alignItems: 'center'
 })
 
 const StyledContainerGrid = styled(Grid)({
     minWidth: '50%'
 })
 
-const StyledButtonLoader = styled(Box)({
-    display: (props) => (props.isloading === 'true' ? 'flex' : 'none')
-})
 
-const StyledButtonText = styled(Box)({
-    display: (props) => (props.isloading === 'true' ? 'none' : 'flex')
+const StyledListItem = styled(ListItem)({
+    minWidth: '100%',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    display: 'flex'
 })
-
 
 const Todo = () => {
     const history = useHistory();
     const newItem = useSelector((state) => state.todoReducer.addItem.newItem)
     const isLoading = useSelector((state) => state.authReducer.loading)
-    const isItemLoading = useSelector((state) => state.todoReducer.addItem.loading)
     const isAllItemLoading = useSelector((state) => state.todoReducer.taskList.loading)
+    const isItemLoading = useSelector((state) => state.todoReducer.addItem.loading)
     const taskList = useSelector((state) => state.todoReducer.taskList.list)
-
+    // const [count, setCount] = useState(0)
     const dispatch = useDispatch()
 
     useEffect(() => {
         dispatch(getAllItemsRequest())
     }, [dispatch])
 
-    let setDisable = false
-
-    const addButton = useCallback(() =>
-        dispatch(addItemRequest()),
-        [dispatch])
-
-    if (!newItem) {
-        setDisable = true
-    }
+    // const incrementCount = () => {
+    //     setCount(count + 1)
+    //     return count
+    // }
 
     const displayDesktop = () => {
         return (<>
@@ -90,6 +83,7 @@ const Todo = () => {
                     <header >
                         <AppBar>{displayDesktop()}</AppBar>
                     </header>
+                    <br />
                     <Grid>
 
                         {isAllItemLoading ? <CircularProgress size='100px' /> :
@@ -104,29 +98,25 @@ const Todo = () => {
 
                                 &ensp;
                                 &ensp;
-                                <Button
+                                <ButtonComponent
                                     style={{ minHeight: '50px' }}
+                                    isLoading={isItemLoading}
                                     label="Add Item"
-                                    disabled={setDisable}
                                     type="submit"
                                     variant="contained"
                                     autoComplete='none'
                                     color='primary'
-                                    onClick={addButton} >
-
-                                    <StyledButtonLoader isloading={isItemLoading.toString()}>
-                                        <CircularProgress size='23px' />
-                                    </StyledButtonLoader>
-
-                                    <StyledButtonText isloading={isItemLoading.toString()}>
-                                        Add
-                                    </StyledButtonText>
-
-                                </Button>
-
+                                    onClick={addItemRequest}
+                                    content="Add"
+                                    loadingcondition={isItemLoading === true}
+                                    condition={newItem}
+                                    disable={true}
+                                />
                                 <List>
                                     {taskList.map((item) =>
-                                        <ListItemComponent item={item} />
+                                        <StyledListItem key={item._id}>
+                                            <ListItemComponent item={item} />
+                                        </StyledListItem>
                                     )}
                                 </List>
                             </Grid>

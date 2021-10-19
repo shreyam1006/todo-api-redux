@@ -1,13 +1,13 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { storeLoginEmail, storeLoginPassword, fetchUserRequest } from '../redux/actions/authAction'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import CircularProgress from '@mui/material/CircularProgress';
-import { Grid, Paper, Avatar, Typography, Button, Link, styled, Box } from '@material-ui/core';
+import { Grid, Paper, Avatar, Typography, Link, styled, Box } from '@material-ui/core';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useCallback } from 'react';
 import TextFieldComponent from './shared/TextFieldComponent';
+import ButtonComponent from './shared/ButtonComponent';
 
 const StyledGrid = styled(Grid)({
     backgroundColor: 'rgb(48, 48, 48)'
@@ -25,14 +25,6 @@ const StyledPaper = styled(Paper)({
     background: 'rgb(48, 48, 48)'
 })
 
-const StyledButtonLoader = styled(Box)({
-    display: (props) => (props.isloading === 'true' ? 'flex' : 'none')
-})
-
-const StyledButtonText = styled(Box)({
-    display: (props) => (props.isloading === 'true' ? 'none' : 'flex')
-})
-
 const toastStyle = {
     backgroundColor: "rgb(203 89 95)",
     color: 'white'
@@ -43,7 +35,6 @@ var pattern = /\S+@\S+\.\S+/
 
 const LoginPage = () => {
     const history = useHistory()
-    const dispatch = useDispatch()
     const isLoading = useSelector((state) => state.authReducer.loading)
     const email = useSelector((state) => state.authReducer.login.email)
     const password = useSelector((state) => state.authReducer.login.password)
@@ -52,20 +43,6 @@ const LoginPage = () => {
     const signUpButton = useCallback(() => {
         history.push('/register')
     }, [history])
-
-
-    const loginButton = useCallback(() =>
-        dispatch(fetchUserRequest(history)),
-        [dispatch, history])
-
-    let setDisable = true
-
-    if (pattern.test(email) && (password.length > 7)) {
-        setDisable = false
-    }
-    if (isLoading === true) {
-        setDisable = true
-    }
 
     return (
         <StyledGrid >
@@ -103,22 +80,22 @@ const LoginPage = () => {
                         condition={password.length < 7} />
                     <br />
                     <br />
-                    <Button
+
+                    <ButtonComponent
                         style={{ minWidth: '400px' }}
+                        isLoading={isLoading}
                         label="Login"
-                        disabled={setDisable}
                         type="submit"
                         variant="contained"
                         autoComplete='none'
                         color='primary'
-                        onClick={loginButton} >
-                        <StyledButtonLoader isloading={isLoading.toString()}>
-                            <CircularProgress size='23px' />
-                        </StyledButtonLoader>
-                        <StyledButtonText isloading={isLoading.toString()}>
-                            Sign in
-                        </StyledButtonText>
-                    </Button>
+                        onClick={fetchUserRequest}
+                        content="Sign in"
+                        history={history}
+                        disable={true}
+                        loadingcondition={isLoading === true}
+                        condition={pattern.test(email) && (password.length > 7)}
+                    />
 
                     <br />
                     <br />
