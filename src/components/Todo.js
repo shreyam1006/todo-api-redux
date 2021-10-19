@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { AppBar, Toolbar, FormControl, InputLabel, Select, MenuItem, Button, Typography, Grid, styled, List, ListItem } from "@material-ui/core"
+import { AppBar, Toolbar, FormControl, InputLabel, Select, MenuItem, Typography, Grid, styled, List, ListItem } from "@material-ui/core"
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import { addItemRequest, getAllItemsRequest } from '../redux/actions/todoAction'
 import { logoutUserRequest } from '../redux/actions/authAction'
@@ -67,8 +67,8 @@ const Todo = () => {
                         id="demo-simple-select"
                         label="Age"
                     >
-                        <MenuItem><Button variant="text">Profile</Button></MenuItem>
-                        <MenuItem><Button variant="text" onClick={() => dispatch(logoutUserRequest(history))}>Logout</Button></MenuItem>
+                        <MenuItem>Profile</MenuItem>
+                        <MenuItem onClick={() => dispatch(logoutUserRequest(history))}>Logout</MenuItem>
                     </Select>
                 </FormControl>
             </StyledToolbar>

@@ -13,15 +13,17 @@ const StyledButtonText = styled(Box)({
 
 const ButtonComponent = (props) => {
     const dispatch = useDispatch()
-
+    // const [disable, setDisable] = useState(props.disable)
     let disable = props.disable
 
     if (props.condition) {
         disable = !props.disable
+        // setDisable(!props.disable)
     }
 
     if (props.loadingcondition) {
         disable = true
+        // setDisable(true)
     }
 
     return (

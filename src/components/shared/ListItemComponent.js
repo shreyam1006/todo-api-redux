@@ -25,21 +25,17 @@ const ListItemComponent = (props) => {
     const dispatch = useDispatch()
     const [edit, setEdit] = useState(false)
     const loadingTasks = useSelector((state) => state.todoReducer.loadingTasks)
+    // const editedTask = useSelector((state) => state.todoReducer.taskList.description)
     let isLoading = false
 
     if (loadingTasks.includes(props.item._id)) {
         isLoading = true
     }
-    const onEditClick = useCallback(() => {
-        setEdit(true)
-    }, [])
 
     const onEditDone = useCallback(() => {
         setEdit(false)
         dispatch(editTaskRequest(props.item._id))
     }, [dispatch, props.item._id])
-
-    // console.log(props.count)
 
     return (
         <>
@@ -48,6 +44,7 @@ const ListItemComponent = (props) => {
                     <TextFieldComponent
                         type="text"
                         label="Edit Item"
+                        // value={editedTask}
                         onChange={storeEditItem}
                     />
                     <IconButton onClick={() => onEditDone()}    >
@@ -73,7 +70,7 @@ const ListItemComponent = (props) => {
                         </Grid>
                     </Box>
                     <Box display='flex'>
-                        <IconButton onClick={() => onEditClick(props.item._id)}    >
+                        <IconButton onClick={() => setEdit(true)}    >
                             <EditOutlined />
                         </IconButton>
                         <IconButton onClick={() => dispatch(deleteTaskRequest(props.item._id))}>
